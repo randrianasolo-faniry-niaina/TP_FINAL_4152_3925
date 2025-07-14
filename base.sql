@@ -42,28 +42,33 @@ CREATE TABLE IF NOT EXISTS emp_emprunt(
 );
 
 
-CREATE or REPLACE view v_emp_objet_image_categorie as
+CREATE or REPLACE view v_emp_objet_image_categorie_membre as
 SELECT o.id_objet id_objet,
        o.nom_objet nom_objet,
        c.nom_categorie nom_categorie,
         o.id_membre id_membre,
-       i.nom_image nom_image
-FROM emp_objet o
-JOIN emp_image i ON o.id_objet = i.id_objet
-JOIN emp_categorie_objet c ON o.id_categorie = c.id_categorie;
-
-
-CREATE or REPLACE view v_emp_objet_membre as
-SELECT o.id_objet id_objet,
-       o.nom_objet nom_objet,
-       o.id_membre id_membre,
-       m.nom nom_membre,
+        m.nom nom_proprio,
        m.email email_membre,
        m.date_de_naissance date_de_naissance_membre,
         m.genre genre_membre,
-       m.ville ville_membre
+       m.ville ville_membre,
+       i.nom_image nom_image
 FROM emp_objet o
+JOIN emp_image i ON o.id_objet = i.id_objet
+JOIN emp_categorie_objet c ON o.id_categorie = c.id_categorie
 JOIN emp_membre m ON o.id_membre = m.id_membre;
+
+-- CREATE or REPLACE view v_emp_objet_membre as
+-- SELECT o.id_objet id_objet,
+--        o.nom_objet nom_objet,
+--        o.id_membre id_membre,
+--        m.nom nom_membre,
+--        m.email email_membre,
+--        m.date_de_naissance date_de_naissance_membre,
+--         m.genre genre_membre,
+--        m.ville ville_membre
+-- FROM emp_objet o
+-- JOIN emp_membre m ON o.id_membre = m.id_membre;
 
 CREATE or replace view v_emp_emprunt_objet_membre as
 SELECT e.id_emprunt id_emprunt,
@@ -72,14 +77,16 @@ SELECT e.id_emprunt id_emprunt,
        o.id_objet id_objet,
        o.nom_objet nom_objet,
         o.nom_image nom_image,
+        o.nom_categorie nom_categorie,
+        o.nom_proprio nom_proprio,
        m.id_membre id_membre,
-       m.nom nom_membre,
+       m.nom nom_emprunteur,
        m.email email_membre,
        m.date_de_naissance date_de_naissance_membre,
        m.genre genre_membre,
        m.ville ville_membre
 FROM emp_emprunt e
-JOIN v_emp_objet_image_categorie o ON e.id_objet = o.id_objet
+JOIN v_emp_objet_image_categorie_membre o ON e.id_objet = o.id_objet
 JOIN emp_membre m ON e.id_membre = m.id_membre;
 
 
@@ -164,14 +171,16 @@ INSERT INTO emp_image (id_objet, nom_image) VALUES
 (31, 'c.png'), (32, 'c.png'), (33, 'c.png'), (34, 'c.png'), (35, 'c.png'),
 (36, 'c.png'), (37, 'c.png'), (38, 'c.png'), (39, 'c.png'), (40, 'c.png');
 -- Insertion des emprunts
+-- Insertion des emprunts
 INSERT INTO emp_emprunt (id_objet, id_membre, date_emprunt, date_retour) VALUES
 (1, 2, '2025-01-15', '2025-01-20'),
 (5, 3, '2025-02-01', '2025-02-05'),
-(11, 1, '2025-02-10', NULL),
+(11, 1, '2025-02-10', '2025-07-20'),
 (17, 4, '2025-02-15', '2025-02-20'),
-(23, 2, '2025-03-01', NULL),
+(23, 2, '2025-03-01', '2025-07-25'),
 (28, 1, '2025-03-05', '2025-03-10'),
-(33, 3, '2025-03-15', NULL),
+(33, 3, '2025-03-15', '2025-07-30'),
 (37, 2, '2025-04-01', '2025-04-05'),
-(3, 4, '2025-04-10', NULL),
-(15, 1, '2025-04-15', NULL);
+(3, 4, '2025-04-10', '2025-08-05'),
+(15, 1, '2025-04-15', '2025-08-10');
+SELECT * from v_emp_emprunt_objet_membre;
