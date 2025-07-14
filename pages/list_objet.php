@@ -1,5 +1,5 @@
-
 <?php
+session_start();
 require_once('../inc/fonction.php');
 
 $categorie = $_GET['cat'] ?? "tous";
@@ -25,17 +25,21 @@ $categories = getCategories();
         .card-hover {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
+
         .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
         }
+
         .card-hover:hover .card-title {
             color: #0d6efd !important;
         }
+
         .search-card {
             border: 1px solid #e0e0e0;
             border-radius: 10px;
         }
+
         .search-card .card-header {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-bottom: 1px solid #dee2e6;
@@ -60,9 +64,14 @@ $categories = getCategories();
                     <h1 class="text-start mb-4">
                         <i class="bi bi-box-seam"></i> Liste des Objets
                     </h1>
-                    <a href="upload.php" class="btn btn-success position-absolute" style="top: 0; right: 0;">
-                        <i class="bi bi-cloud-upload"></i> Upload
-                    </a>
+                    <div class="position-absolute" style="top: 0; right: 0;">
+                        <a href="membre.php" class="btn btn-info me-2">
+                            <i class="bi bi-people"></i> Membres
+                        </a>
+                        <a href="upload.php" class="btn btn-success">
+                            <i class="bi bi-cloud-upload"></i> Upload
+                        </a>
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -83,8 +92,8 @@ $categories = getCategories();
                                             Toutes les catégories
                                         </option>
                                         <?php foreach ($categories as $cat): ?>
-                                            <option value="<?= htmlspecialchars($cat['nom_categorie']) ?>" 
-                                                    <?= $categorie === $cat['nom_categorie'] ? "selected" : "" ?>>
+                                            <option value="<?= htmlspecialchars($cat['nom_categorie']) ?>"
+                                                <?= $categorie === $cat['nom_categorie'] ? "selected" : "" ?>>
                                                 <?= htmlspecialchars(ucfirst($cat['nom_categorie'])) ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -95,12 +104,12 @@ $categories = getCategories();
                                     <label for="nomObjet" class="form-label">
                                         <i class="bi bi-search"></i> Nom de l'objet :
                                     </label>
-                                    <input type="text" 
-                                           class="form-control" 
-                                           id="nomObjet" 
-                                           name="nom" 
-                                           placeholder="Rechercher un objet..."
-                                           value="<?= htmlspecialchars($nom_objet) ?>">
+                                    <input type="text"
+                                        class="form-control"
+                                        id="nomObjet"
+                                        name="nom"
+                                        placeholder="Rechercher un objet..."
+                                        value="<?= htmlspecialchars($nom_objet) ?>">
                                 </div>
 
                                 <div class="col-md-4">
@@ -108,12 +117,12 @@ $categories = getCategories();
                                         <i class="bi bi-check-circle"></i> Disponibilité :
                                     </label>
                                     <div class="form-check">
-                                        <input class="form-check-input" 
-                                               type="checkbox" 
-                                               id="disponible" 
-                                               name="disponible" 
-                                               value="1"
-                                               <?= $disponible_seulement ? "checked" : "" ?>>
+                                        <input class="form-check-input"
+                                            type="checkbox"
+                                            id="disponible"
+                                            name="disponible"
+                                            value="1"
+                                            <?= $disponible_seulement ? "checked" : "" ?>>
                                         <label class="form-check-label" for="disponible">
                                             Objets disponibles seulement
                                         </label>
@@ -130,7 +139,7 @@ $categories = getCategories();
                                         </a>
                                         <div class="ms-auto">
                                             <span class="badge bg-info fs-6">
-                                                <i class="bi bi-list-ul"></i> 
+                                                <i class="bi bi-list-ul"></i>
                                                 <?= count($obj) ?> objet<?= count($obj) > 1 ? 's' : '' ?> trouvé<?= count($obj) > 1 ? 's' : '' ?>
                                             </span>
                                         </div>
@@ -152,19 +161,19 @@ $categories = getCategories();
                                     <i class="bi bi-tag"></i> Catégorie: <?= htmlspecialchars(ucfirst($categorie)) ?>
                                 </span>
                             <?php endif; ?>
-                            
+
                             <?php if (!empty($nom_objet)): ?>
                                 <span class="badge bg-primary">
                                     <i class="bi bi-search"></i> Nom: "<?= htmlspecialchars($nom_objet) ?>"
                                 </span>
                             <?php endif; ?>
-                            
+
                             <?php if ($disponible_seulement): ?>
                                 <span class="badge bg-success">
                                     <i class="bi bi-check-circle"></i> Disponibles seulement
                                 </span>
                             <?php endif; ?>
-                            
+
                             <a href="list_objet.php" class="badge bg-warning text-dark text-decoration-none">
                                 <i class="bi bi-x-circle"></i> Effacer les filtres
                             </a>
@@ -172,7 +181,7 @@ $categories = getCategories();
                     </div>
                 <?php endif; ?>
 
-          
+
                 <div class="row">
                     <?php if (empty($obj)): ?>
                         <div class="col-12">
@@ -218,6 +227,11 @@ $categories = getCategories();
                                                 $estEmprunte = isObjetEmprunte($emp);
                                             ?>
                                                 <?php if ($estEmprunte): ?>
+                                                    <div class="alert alert-success mb-2" role="alert">
+                                                        <i class="bi bi-check-circle"></i>
+                                                        <strong>Disponible le </strong>
+                                                        <?= $emp['date_retour']; ?>
+                                                    </div>
                                                     <div class="alert alert-warning mb-2" role="alert">
                                                         <i class="bi bi-exclamation-triangle"></i>
                                                         <strong>Emprunté</strong><br>
@@ -231,12 +245,14 @@ $categories = getCategories();
                                                     <div class="alert alert-success mb-2" role="alert">
                                                         <i class="bi bi-check-circle"></i>
                                                         <strong>Disponible</strong>
+                                                        <a href="emprunt.php?id_objet=<?= $objet['id_objet']; ?>&id_membre=<?= $_SESSION['user_id']; ?>" class="btn btn-outline-secondary"><i class="bi bi-hand-thumbs-up"></i> Emprunter cet objet</a>
                                                     </div>
                                                 <?php endif; ?>
                                             <?php } else { ?>
                                                 <div class="alert alert-success mb-2" role="alert">
                                                     <i class="bi bi-check-circle"></i>
                                                     <strong>Disponible</strong>
+                                                    <a href="emprunt.php?id_objet=<?= $objet['id_objet']; ?>&id_membre=<?= $_SESSION['user_id']; ?>" class="btn btn-outline-secondary"><i class="bi bi-hand-thumbs-up"></i> Emprunter cet objet</a>
                                                 </div>
                                             <?php } ?>
 

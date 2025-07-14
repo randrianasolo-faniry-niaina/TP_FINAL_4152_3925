@@ -1,3 +1,4 @@
+
 <?php
 ini_set("display_errors", "1");
 require('connection.php');
@@ -451,4 +452,22 @@ function getObjEmpruntsHistorique($id_objet)
         $emprunts[] = $row;
     }
     return $emprunts;
+}
+function getMembre(){
+    $sql="SELECT * FROM emp_membre";
+    $result = mysqli_query(dbconnect(), $sql);
+    $membre = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $membre[] = $row;
+    }
+    return $membre;
+};
+
+function insererEmprunt($id_objet, $id_membre, $date_emprunt, $date_retour)
+{
+
+    $sql = "INSERT INTO emp_emprunt (id_objet, id_membre, date_emprunt, date_retour) 
+            VALUES ('$id_objet', '$id_membre', '$date_emprunt', '$date_retour')";
+
+    return mysqli_query(dbconnect(), $sql);
 }

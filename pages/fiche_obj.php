@@ -1,5 +1,6 @@
 
 <?php
+session_start();
 require_once('../inc/fonction.php');
 $id_obj = $_GET['obj'] ?? 'default';
 $objet = getObjById($id_obj);
@@ -166,9 +167,13 @@ if (!$objet) {
                                         <i class="bi bi-clock"></i> Non disponible
                                     </button>
                                 <?php else: ?>
-                                    <button class="btn btn-primary btn-lg w-100">
-                                        <i class="bi bi-hand-thumbs-up"></i> Emprunter cet objet
-                                    </button>
+                                    <form method="get" action="emprunt.php">
+                                        <input type="hidden" name="id_objet" value="<?= $id_obj; ?>">
+                                        <input type="hidden" name="id_membre" value="<?= $_SESSION['user_id']; ?>">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                                            <i class="bi bi-hand-thumbs-up"></i> Emprunter cet objet
+                                        </button>
+                                    </form>
                                 <?php endif; ?>
                             </div>
                         <?php } else { ?>
