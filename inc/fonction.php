@@ -1,4 +1,3 @@
-
 <?php
 ini_set("display_errors", "1");
 require('connection.php');
@@ -470,4 +469,129 @@ function insererEmprunt($id_objet, $id_membre, $date_emprunt, $date_retour)
             VALUES ('$id_objet', '$id_membre', '$date_emprunt', '$date_retour')";
 
     return mysqli_query(dbconnect(), $sql);
+}
+
+function getEmpruntsNonRendus($id_membre)
+{
+    $sql = "SELECT e.*, o.nom_objet, c.nom_categorie, m.nom as nom_proprietaire,
+                   COALESCE(i.nom_image, 'c.png') as nom_image
+            FROM emp_emprunt e
+            JOIN emp_objet o ON e.id_objet = o.id_objet
+            JOIN emp_categorie_objet c ON o.id_categorie = c.id_categorie
+            JOIN emp_membre m ON o.id_membre = m.id_membre
+            LEFT JOIN emp_image i ON o.id_objet = i.id_objet AND i.est_principale = 1
+            WHERE e.id_membre = '$id_membre' AND (e.date_retour IS NULL OR e.date_retour > CURDATE())
+            ORDER BY e.date_emprunt DESC";
+
+    $result = mysqli_query(dbconnect(), $sql);
+    $emprunts = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $emprunts[] = $row;
+    }
+    return $emprunts;
+}
+
+function rendreObjet($id_emprunt, $etat_objet)
+{
+    $id_emprunt = mysqli_real_escape_string(dbconnect(), $id_emprunt);
+    $etat_objet = mysqli_real_escape_string(dbconnect(), $etat_objet);
+    
+    $sql = "UPDATE emp_emprunt 
+            SET date_retour = CURDATE(), etat_objet = '$etat_objet' 
+            WHERE id_emprunt = '$id_emprunt'";
+    
+    return mysqli_query(dbconnect(), $sql);
+}
+
+function getStatistiquesEmprunts()
+{
+    $stats = [];
+    
+    // Statistiques générales
+    $sql_total = "SELECT COUNT(*) as total FROM emp_emprunt";
+    $result = mysqli_query(dbconnect(), $sql_total);
+    $stats['total_emprunts'] = mysqli_fetch_assoc($result)['total'];
+    
+    // Emprunts en cours (non retournés)
+    $sql_en_cours = "SELECT COUNT(*) as en_cours FROM emp_emprunt WHERE date_retour IS NULL";
+    $result = mysqli_query(dbconnect(), $sql_en_cours);
+    $stats['emprunts_en_cours'] = mysqli_fetch_assoc($result)['en_cours'];
+    
+    // Emprunts terminés
+    $sql_termines = "SELECT COUNT(*) as termines FROM emp_emprunt WHERE date_retour IS NOT NULL";
+    $result = mysqli_query(dbconnect(), $sql_termines);
+    $stats['emprunts_termines'] = mysqli_fetch_assoc($result)['termines'];
+    
+    // Statistiques par état
+    $sql_etat = "SELECT etat_objet, COUNT(*) as count FROM emp_emprunt WHERE etat_objet IS NOT NULL GROUP BY etat_objet";
+    $result = mysqli_query(dbconnect(), $sql_etat);
+    $stats['par_etat'] = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $stats['par_etat'][$row['etat_objet']] = $row['count'];
+    }
+    
+    return $stats;
+}
+
+function getTousLesEmprunts($filtre = 'tous', $recherche = '')
+{
+    $sql = "SELECT e.*, o.nom_objet, c.nom_categorie, 
+                   m1.nom as nom_emprunteur, m1.email as email_emprunteur,
+                   m2.nom as nom_proprietaire, m2.email as email_proprietaire,
+                   COALESCE(i.nom_image, 'c.png') as nom_image
+            FROM emp_emprunt e
+            JOIN emp_objet o ON e.id_objet = o.id_objet
+            JOIN emp_categorie_objet c ON o.id_categorie = c.id_categorie
+            JOIN emp_membre m1 ON e.id_membre = m1.id_membre
+            JOIN emp_membre m2 ON o.id_membre = m2.id_membre
+            LEFT JOIN emp_image i ON o.id_objet = i.id_objet AND i.est_principale = 1
+            WHERE 1=1";
+    
+    // Filtres
+    if ($filtre == 'en_cours') {
+        $sql .= " AND e.date_retour IS NULL";
+    } elseif ($filtre == 'termines') {
+        $sql .= " AND e.date_retour IS NOT NULL";
+    } elseif ($filtre == 'bon') {
+        $sql .= " AND e.etat_objet = 'bon'";
+    } elseif ($filtre == 'abime') {
+        $sql .= " AND e.etat_objet = 'abîmé'";
+    } elseif ($filtre == 'casse') {
+        $sql .= " AND e.etat_objet = 'cassé'";
+    }
+    
+    // Recherche
+    if (!empty($recherche)) {
+        $recherche = mysqli_real_escape_string(dbconnect(), $recherche);
+        $sql .= " AND (o.nom_objet LIKE '%$recherche%' OR m1.nom LIKE '%$recherche%' OR m2.nom LIKE '%$recherche%')";
+    }
+    
+    $sql .= " ORDER BY e.date_emprunt DESC";
+    
+    $result = mysqli_query(dbconnect(), $sql);
+    $emprunts = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $emprunts[] = $row;
+    }
+    return $emprunts;
+}
+
+function getStatistiquesParMembre()
+{
+    $sql = "SELECT m.nom, m.email,
+                   COUNT(e.id_emprunt) as total_emprunts,
+                   SUM(CASE WHEN e.date_retour IS NULL THEN 1 ELSE 0 END) as en_cours,
+                   SUM(CASE WHEN e.date_retour IS NOT NULL THEN 1 ELSE 0 END) as termines
+            FROM emp_membre m
+            LEFT JOIN emp_emprunt e ON m.id_membre = e.id_membre
+            GROUP BY m.id_membre, m.nom, m.email
+            HAVING total_emprunts > 0
+            ORDER BY total_emprunts DESC";
+    
+    $result = mysqli_query(dbconnect(), $sql);
+    $stats = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $stats[] = $row;
+    }
+    return $stats;
 }

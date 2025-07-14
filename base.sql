@@ -92,6 +92,8 @@ FROM emp_emprunt e
 JOIN v_emp_objet_image_categorie_membre o ON e.id_objet = o.id_objet
 JOIN emp_membre m ON e.id_membre = m.id_membre;
 
+alter Table emp_emprunt add column etat_objet CHAR(20) Default 'bon';
+
 
 
 

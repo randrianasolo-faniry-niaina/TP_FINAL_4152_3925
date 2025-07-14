@@ -49,11 +49,25 @@ $categories = getCategories();
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <p><i class="bi bi-box-seam"></i> Liste des Objets</p>
+            <a class="navbar-brand" href="list_objet.php">
+                <i class="bi bi-box-seam"></i> EmpruntApp
+            </a>
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="../inc/deconnexion.php">Deconnexion</a>
+                <a class="nav-link" href="statistiques.php">
+                    <i class="bi bi-bar-chart-line"></i> Statistiques
+                </a>
+                <a class="nav-link" href="mes_emprunts.php">
+                    <i class="bi bi-clock-history"></i> Mes emprunts
+                </a>
+                <a class="nav-link" href="add_objet.php">
+                    <i class="bi bi-plus-circle"></i> Ajouter un objet
+                </a>
+                <span class="navbar-text me-3">
+                    Bonjour <?= htmlspecialchars($_SESSION['user']['nom']) ?>
+                </span>
+                <a class="nav-link" href="../inc/deconnexion.php">Déconnexion</a>
             </div>
         </div>
     </nav>
