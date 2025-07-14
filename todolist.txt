@@ -1,0 +1,16 @@
+-creation database (ok)
+- insertion données (ok)
+- creation de vue (ok)
+- page de login et inscription (ok)
+    - traitement_login (ok)
+    - traitement_inscription (ok)
+    -fonction mifanaraka amin'ny login et inscription (ok)
+
+- listes des objets (ok)
+    - fonction qui recupere les objets
+
+-filtre des objets (ok)
+     - fonction qui filtre les objets (ok)
+        - modification de la fonction qui listent les objets(ok)
+
+-css de tous les pages (ok)

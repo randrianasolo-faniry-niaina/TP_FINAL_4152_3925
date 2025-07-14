@@ -17,15 +17,23 @@ $emprunt = getEmprunt();
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../assets/bootstrap-icons/font/bootstrap-icons.css">
 </head>
-    
+
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <p><i class="bi bi-box-seam"></i> Liste des Objets</p>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../inc/deconnexion.php">Deconnexion</a>
+            </div>
+        </div>
+    </nav>
     <div class="container mt-5">
         <div class="row">
             <div class="col-12">
                 <h1 class="text-center mb-4">
                     <i class="bi bi-box-seam"></i> Liste des Objets
                 </h1>
-                
+
                 <div class="mb-4">
                     <div class="row">
                         <div class="col-md-3">

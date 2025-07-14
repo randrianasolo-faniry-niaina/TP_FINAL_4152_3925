@@ -1,4 +1,5 @@
-use emprunt;
+-- Active: 1752483638349@@172.60.0.17@3306@db_s2_ETU004152
+use db_s2_ETU004152;
 
 CREATE TABLE IF NOT EXISTS emp_membre (
     id_membre INT AUTO_INCREMENT PRIMARY KEY,
