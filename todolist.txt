@@ -1,3 +1,4 @@
+V1
 -creation database (ok)
 - insertion données (ok)
 - creation de vue (ok)
@@ -14,3 +15,18 @@
         - modification de la fonction qui listent les objets(ok)
 
 -css de tous les pages (ok)
+
+V2
+-ajout d'objet(ok)
+    -fonction d'ajout(ok)
+    -formulaire d'ajout (ok)
+        -possibiliter de mettre plusieurs photos(ok)
+        -img par défaut si pas d'image(ok)
+-fiche obj  (ok)
+    -hystorique(ojk)
+        -fonction pour l'historique(ok)
+    -affichage de tous les img de l'obj (ok)
+-rajout de critère de recherche (ok)
+    -fonction de recherche avancer (ok)
+-fiche membre(ok)
+    -modifications des fonctions de l'historique des fichier fiches obj (ok)

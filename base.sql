@@ -1,5 +1,5 @@
--- Active: 1752483638349@@172.60.0.17@3306@db_s2_ETU004152
-use db_s2_ETU004152;
+-- Active: 1741104595338@@127.0.0.1@3306@emprunt
+use emprunt;
 
 CREATE TABLE IF NOT EXISTS emp_membre (
     id_membre INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS emp_image(
     id_image INT AUTO_INCREMENT PRIMARY KEY,
     id_objet INT NOT NULL,
     nom_image TEXT NOT NULL,
+    est_principale INT DEFAULT 0,
     FOREIGN KEY (id_objet) REFERENCES emp_objet(id_objet)   
 );
 
@@ -57,7 +58,8 @@ SELECT o.id_objet id_objet,
 FROM emp_objet o
 JOIN emp_image i ON o.id_objet = i.id_objet
 JOIN emp_categorie_objet c ON o.id_categorie = c.id_categorie
-JOIN emp_membre m ON o.id_membre = m.id_membre;
+JOIN emp_membre m ON o.id_membre = m.id_membre
+WHERE i.est_principale = 1;
 
 -- CREATE or REPLACE view v_emp_objet_membre as
 -- SELECT o.id_objet id_objet,
@@ -91,7 +93,7 @@ JOIN v_emp_objet_image_categorie_membre o ON e.id_objet = o.id_objet
 JOIN emp_membre m ON e.id_membre = m.id_membre;
 
 
--- ...existing code...
+
 
 -- Insertion des membres
 INSERT INTO emp_membre (nom, email, date_de_naissance, genre, ville, mdp, image_profil) VALUES
@@ -185,3 +187,6 @@ INSERT INTO emp_emprunt (id_objet, id_membre, date_emprunt, date_retour) VALUES
 (3, 4, '2025-04-10', '2025-08-05'),
 (15, 1, '2025-04-15', '2025-08-10');
 SELECT * from v_emp_emprunt_objet_membre;
+SELECT * from emp_objet;
+SELECT * from emp_image;
+ALTER TABLE emp_image ADD COLUMN est_principale INT DEFAULT 1;
