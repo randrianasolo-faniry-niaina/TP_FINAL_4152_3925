@@ -64,9 +64,6 @@ $categories = getCategories();
                 <a class="nav-link" href="add_objet.php">
                     <i class="bi bi-plus-circle"></i> Ajouter un objet
                 </a>
-                <span class="navbar-text me-3">
-                    Bonjour <?= htmlspecialchars($_SESSION['user']['nom']) ?>
-                </span>
                 <a class="nav-link" href="../inc/deconnexion.php">Déconnexion</a>
             </div>
         </div>

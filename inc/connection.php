@@ -5,8 +5,8 @@ function dbconnect()
     static $connect = null;
 
     if ($connect === null) {
-        $connect = mysqli_connect('localhost', 'ETU004152', 'jpKZdNVR', 'db_s2_ETU004152');
-        //$connect = mysqli_connect('localhost', 'root', '', 'emprunt');
+        // $connect = mysqli_connect('localhost', 'ETU004152', 'jpKZdNVR', 'db_s2_ETU004152');
+        $connect = mysqli_connect('localhost', 'root', '', 'emprunt');
 
         if (!$connect) {
 
